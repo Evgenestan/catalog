@@ -4,6 +4,10 @@ import 'package:catalog/userSettings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rxdart/rxdart.dart';
+
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +40,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  var subject = PublishSubject<int>();
   Map _idAndProduct = <int, Product>{};
+  Map _idAndProductUnmodifiable = <int, Product>{};
   TabController _tabController;
+  Map _numberAndId = <int, int>{};
 
   void addOrRemoveFavorite(int index) async {
     setState(() {
@@ -121,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: null,
+                          onTap:() => subject.add(1),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -153,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: null,
+                          onTap:() => subject.add(2),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -185,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: null,
+                          onTap: () => subject.add(3),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -217,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: null,
+                          onTap:  () => subject.add(4),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -248,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: null,
+                          onTap:  () => subject.add(5),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -330,7 +337,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             image: DecorationImage(
                               fit: BoxFit.fill,
                               image:
-                                  NetworkImage(_idAndProduct[index].imageUrl),
+                                  NetworkImage(_idAndProduct[_numberAndId[index]].imageUrl),
                             ),
                           ),
                           width: 130,
@@ -345,12 +352,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             textAlign: TextAlign.left,
                             text: TextSpan(children: <TextSpan>[
                               TextSpan(
-                                text: _idAndProduct[index].title,
+                                text: _idAndProduct[_numberAndId[index]].title,
                                 style: smallBlackTextStyle,
                               ),
                               TextSpan(
                                   text:
-                                      ' /${_idAndProduct[index].unitOfMeasurement}',
+                                      ' /${_idAndProduct[_numberAndId[index]].unitOfMeasurement}',
                                   style: smallGrayTextStyle),
                             ]),
                           ),
@@ -365,18 +372,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               width: 26,
                               height: 26,
                               decoration: BoxDecoration(
-                                  color: _idAndProduct[index].colorOfRating,
+                                  color: _idAndProduct[_numberAndId[index]].colorOfRating,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5))),
                               child: Text(
-                                '${_idAndProduct[index].rating}',
+                                '${_idAndProduct[_numberAndId[index]].rating}',
                                 style: smallWhiteTextStyle,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
                               child: Text(
-                                '${_idAndProduct[index].numberOfRatings} оценок',
+                                '${_idAndProduct[_numberAndId[index]].numberOfRatings} оценок',
                                 style: smallGrayTextStyle,
                               ),
                             )
@@ -391,7 +398,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             width: 140,
                             height: 30,
                             child: Text(
-                              _idAndProduct[index].description,
+                              _idAndProduct[_numberAndId[index]].description,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: smallGrayTextStyle,
@@ -404,7 +411,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              _idAndProduct[index].from,
+                              _idAndProduct[_numberAndId[index]].from,
                               style: superSmallBlackTextStyle,
                               textAlign: TextAlign.left,
                             )),
@@ -414,7 +421,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            '${_idAndProduct[index].price} Р',
+                            '${_idAndProduct[_numberAndId[index]].price} Р',
                             style: mediumBlackTextStyle,
                             textAlign: TextAlign.left,
                           ),
@@ -441,14 +448,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               SliverAppBar(
                 floating: true,
                 backgroundColor: Colors.white,
-                expandedHeight: 121.0,
-                toolbarHeight: 121,
+                expandedHeight: 130.0,
+                toolbarHeight: 130,
                 actions: [
                   filterParameters(),
                 ],
               ),
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(10, 15, 10, 40),
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 40),
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -459,7 +466,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     (BuildContext context, int index) {
                       return products(index);
                     },
-                    childCount: _idAndProduct.length,
+                    childCount: _numberAndId.length,
                   ),
                 ),
               ),
@@ -503,16 +510,49 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
+
+  void filter(int value){
+    print(value);
+
+    Map _idAndProduct = <int, Product>{};
+    _numberAndId = numberAndIdSet(_idAndProductUnmodifiable);
+
+    if(value == 1){
+      _idAndProduct = _idAndProductUnmodifiable;
+      _numberAndId = numberAndIdSet(_idAndProductUnmodifiable);
+    }
+
+    for(var i = 0; i < _idAndProductUnmodifiable.length; i++){
+      print(i);
+      print(_idAndProductUnmodifiable[_numberAndId[i]].title);
+      if(_idAndProductUnmodifiable[_numberAndId[i]].category == value){
+
+        _idAndProduct[_numberAndId[i]] = _idAndProductUnmodifiable[_numberAndId[i]];
+      }
+
+    }
+    setState(() {
+      _numberAndId = numberAndIdSet(_idAndProduct);
+    });
+
+
+
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
+    subject.close();
     super.dispose();
   }
 
   @override
   void initState() {
     _idAndProduct = idAndProductSet();
+    _idAndProductUnmodifiable = _idAndProduct;
+    _numberAndId = numberAndIdSet(_idAndProduct);
     _tabController = TabController(length: 3, vsync: this);
+    subject.listen((value) { filter(value); });
     super.initState();
   }
 }
