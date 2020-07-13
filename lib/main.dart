@@ -3,22 +3,23 @@ import 'package:catalog/style.dart';
 import 'package:catalog/userSettings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
-void main() {
+// Если ты запускаешь какую-то асинхронную функцию в main, которая как-то инициализирует твое приложение - сделай и main асинхронным, и запускай приложение после инициализации
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setUserSettings();
+  await setUserSettings();
   runApp(MyApp());
 }
 
-void setUserSettings() async {
+Future<void> setUserSettings() async {
+  // final
   var pref = await SharedPreferences.getInstance();
-  var userSettingsJson = await pref.getString('userSettings') ?? 'null';
-  if (userSettingsJson != 'null') {
+  // Присвоение 'null', если pref вернет обычный null - не имеет смысла, можно было не усложнять + сделай ее final
+//  var userSettingsJson = await pref.getString('userSettings') ?? 'null'; // await не нужен, тк pref.getString возвращает String, а не Future<String>
+  final userSettingsJson = await pref.getString('userSettings');
+  if (userSettingsJson != null) {
     userSettings.fromJson(userSettingsJson);
   }
 }
@@ -40,12 +41,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  // Эта переменная не переопределяется - сделай ее final, вообще запомни правило - если переменная не переопределяется - final, если переопределяется - лучше объявлять переменную через тип, а не var
+  // с var в прошлый раз я тебе показывал, к каким проблемам может привести его использование при невнимательности, поэтому объявляй так: int numericVariable = 1; вместо var numericVariable = 1;
   var subject = PublishSubject<int>();
+  // Вот как тут - тут же не var, а тип, но надо идти до конца и тип будет не просто Map, а Map<int, Product> ...
+  // про final уже написал
   Map _idAndProduct = <int, Product>{};
   Map _idAndProductUnmodifiable = <int, Product>{};
   TabController _tabController;
   Map _numberAndId = <int, int>{};
 
+  // я заменил твой analysis_options на свой, мой - более строгий, и подсветит ошибки, например ту, что ты увидишь тут
+  // Все, что подсветит тебе линтер - исправь
   void addOrRemoveFavorite(int index) async {
     setState(() {
       if (userSettings.checkFavorite(index)) {
@@ -73,6 +80,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             height: 55,
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
+              /*
+              В целом стоит выносить константы куда-то в отдельный файл для переиспользования,
+              например сделать этот цвет константой const Color lightColor = Color(0xFFf2f3f3);
+              И использовать тут lightColor (название условное) - так ты сможешь не искать в коде
+              все использования этого цвета, если он изменится в дизайне, чтобы изменить его в приложении,
+              и намного удобнее иметь все в одном месте, перед глазами
+              */
               color: Color(0xFFf2f3f3),
               borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
@@ -88,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     spreadRadius: 1,
                   )
                 ],
+                // тоже самое про константы
                 color: Color(0xFF47a73d),
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
@@ -128,14 +143,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap:() => subject.add(1),
+                          onTap: () => subject.add(1),
                           child: Container(
                             height: 46,
                             width: 46,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://sun9-4.userapi.com/c857324/v857324456/1cdf9c/l_0xdlF-1Ww.jpg'),
+                                  image: NetworkImage('https://sun9-4.userapi.com/c857324/v857324456/1cdf9c/l_0xdlF-1Ww.jpg'),
                                 ),
                                 shape: BoxShape.circle,
                                 border: Border.all(color: borderColor)),
@@ -160,14 +174,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap:() => subject.add(2),
+                          onTap: () => subject.add(2),
                           child: Container(
                             height: 46,
                             width: 46,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://sun9-21.userapi.com/c857324/v857324456/1cdfa3/kM7zX6AWV34.jpg'),
+                                  image: NetworkImage('https://sun9-21.userapi.com/c857324/v857324456/1cdfa3/kM7zX6AWV34.jpg'),
                                 ),
                                 shape: BoxShape.circle,
                                 border: Border.all(color: borderColor)),
@@ -198,8 +211,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             width: 46,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://sun9-35.userapi.com/c857324/v857324456/1cdfaa/Qh0uxQFDO_I.jpg'),
+                                  image: NetworkImage('https://sun9-35.userapi.com/c857324/v857324456/1cdfaa/Qh0uxQFDO_I.jpg'),
                                 ),
                                 shape: BoxShape.circle,
                                 border: Border.all(color: borderColor)),
@@ -224,14 +236,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap:  () => subject.add(4),
+                          onTap: () => subject.add(4),
                           child: Container(
                             height: 46,
                             width: 46,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://sun9-47.userapi.com/c857324/v857324456/1cdfb1/R2yXjgpHYUg.jpg'),
+                                  image: NetworkImage('https://sun9-47.userapi.com/c857324/v857324456/1cdfb1/R2yXjgpHYUg.jpg'),
                                 ),
                                 shape: BoxShape.circle,
                                 border: Border.all(color: borderColor)),
@@ -255,14 +266,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap:  () => subject.add(5),
+                          onTap: () => subject.add(5),
                           child: Container(
                             height: 46,
                             width: 46,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://sun9-4.userapi.com/c857324/v857324456/1cdf9c/l_0xdlF-1Ww.jpg'),
+                                  image: NetworkImage('https://sun9-4.userapi.com/c857324/v857324456/1cdf9c/l_0xdlF-1Ww.jpg'),
                                 ),
                                 shape: BoxShape.circle,
                                 border: Border.all(color: borderColor)),
@@ -295,9 +305,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Container(
                 height: 46,
                 width: 46,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: borderColor)),
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: borderColor)),
                 child: GestureDetector(
                   onTap: () => addOrRemoveFavorite(index),
                   child: Icon(
@@ -318,9 +326,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: borderColor),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+            decoration: BoxDecoration(border: Border.all(color: borderColor), borderRadius: BorderRadius.all(Radius.circular(10))),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.center,
@@ -336,8 +342,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             image: DecorationImage(
                               fit: BoxFit.fill,
-                              image:
-                                  NetworkImage(_idAndProduct[_numberAndId[index]].imageUrl),
+                              image: NetworkImage(_idAndProduct[_numberAndId[index]].imageUrl),
                             ),
                           ),
                           width: 130,
@@ -355,10 +360,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 text: _idAndProduct[_numberAndId[index]].title,
                                 style: smallBlackTextStyle,
                               ),
-                              TextSpan(
-                                  text:
-                                      ' /${_idAndProduct[_numberAndId[index]].unitOfMeasurement}',
-                                  style: smallGrayTextStyle),
+                              TextSpan(text: ' /${_idAndProduct[_numberAndId[index]].unitOfMeasurement}', style: smallGrayTextStyle),
                             ]),
                           ),
                         ),
@@ -371,10 +373,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               alignment: Alignment.center,
                               width: 26,
                               height: 26,
-                              decoration: BoxDecoration(
-                                  color: _idAndProduct[_numberAndId[index]].colorOfRating,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
+                              decoration: BoxDecoration(color: _idAndProduct[_numberAndId[index]].colorOfRating, borderRadius: BorderRadius.all(Radius.circular(5))),
                               child: Text(
                                 '${_idAndProduct[_numberAndId[index]].rating}',
                                 style: smallWhiteTextStyle,
@@ -442,8 +441,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           builder: (BuildContext context) {
             return CustomScrollView(slivers: <Widget>[
               SliverOverlapInjector(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               ),
               SliverAppBar(
                 floating: true,
@@ -463,6 +461,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     childAspectRatio: 190 / 350,
                   ),
                   delegate: SliverChildBuilderDelegate(
+                    // стоило сделать функцию _productBuilder(BuildContext context, int index) => ... вместо products(int index), тогда бы не была нужна эта анонимка
                     (BuildContext context, int index) {
                       return products(index);
                     },
@@ -510,33 +509,27 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
-
-  void filter(int value){
+  void filter(int value) {
     print(value);
 
     Map _idAndProduct = <int, Product>{};
     _numberAndId = numberAndIdSet(_idAndProductUnmodifiable);
 
-    if(value == 1){
+    if (value == 1) {
       _idAndProduct = _idAndProductUnmodifiable;
       _numberAndId = numberAndIdSet(_idAndProductUnmodifiable);
     }
 
-    for(var i = 0; i < _idAndProductUnmodifiable.length; i++){
+    for (var i = 0; i < _idAndProductUnmodifiable.length; i++) {
       print(i);
       print(_idAndProductUnmodifiable[_numberAndId[i]].title);
-      if(_idAndProductUnmodifiable[_numberAndId[i]].category == value){
-
+      if (_idAndProductUnmodifiable[_numberAndId[i]].category == value) {
         _idAndProduct[_numberAndId[i]] = _idAndProductUnmodifiable[_numberAndId[i]];
       }
-
     }
     setState(() {
       _numberAndId = numberAndIdSet(_idAndProduct);
     });
-
-
-
   }
 
   @override
@@ -552,7 +545,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _idAndProductUnmodifiable = _idAndProduct;
     _numberAndId = numberAndIdSet(_idAndProduct);
     _tabController = TabController(length: 3, vsync: this);
-    subject.listen((value) { filter(value); });
+    subject.listen((value) {
+      filter(value);
+    });
     super.initState();
   }
 }

@@ -74,15 +74,14 @@ Map idAndProductSet() {
   //print(test.title);
   return _idAndProductTest;
 }
+
 Map numberAndIdSet(Map idAndProduct) {
   var _numberAndIdTest = <int, int>{};
 
   //print(idAndProduct.keys.elementAt(2));
 
-
-  for(var i = 0; i < idAndProduct.length; i++){
+  for (var i = 0; i < idAndProduct.length; i++) {
     _numberAndIdTest[i] = idAndProduct.keys.elementAt(i);
-
   }
   print(_numberAndIdTest.keys);
   return _numberAndIdTest;
@@ -109,8 +108,9 @@ class Product {
     int _numberOfRatings,
     String _description,
     String _from,
-      int _category,
+    int _category,
   ) {
+    // линтер тебе подскажет даже лучше моего, что тут не так
     imageUrl = _imageUrl;
     title = _title;
     price = _price;

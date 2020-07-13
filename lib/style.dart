@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Оп, это я увидел уже после main с объявлениями тобой там напрямую Color(...)
+// В общем стоит перенести сюда все твои цвета оттуда и использовать так же
+// + смотри, что тебе скажет тут линтер
 var nonColorMediumText = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
 var shadowColor = Color(0xFFf5f5f5);
 var borderColor = Color(0xFFe2e2e2);

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Это что-то вроде экспериментальной зоны?)
 void main() {
   runApp(MyApp());
 }
@@ -33,9 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   TabController _tabController;
 
-  void iconPressed(){
-
-  }
+  void iconPressed() {}
 
   @override
   void initState() {
@@ -60,41 +59,44 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: IconButton(
-                          icon: Icon(Icons.add,color: Colors.black,),
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.black,
+                          ),
                           onPressed: iconPressed,
                         ),
                       ),
-
-
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: IconButton(
-                          icon: Icon(Icons.person,color: Colors.black,),
+                          icon: Icon(
+                            Icons.person,
+                            color: Colors.black,
+                          ),
                           onPressed: iconPressed,
-
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: IconButton(
-                          icon: Icon(Icons.pageview,color: Colors.black,),
+                          icon: Icon(
+                            Icons.pageview,
+                            color: Colors.black,
+                          ),
                           onPressed: iconPressed,
-
                         ),
                       ),
                     ],
                   ),
                 )
               ],
-
             ),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
               delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                (BuildContext context, int index) {
                   return Text('item $index');
                 },
               ),
