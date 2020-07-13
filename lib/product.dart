@@ -1,9 +1,10 @@
 import 'dart:ui';
 
+import 'package:catalog/style.dart';
 import 'package:flutter/material.dart';
 
 Map idAndProductSet() {
-  var _idAndProductTest = <int, Product>{};
+  final _idAndProductTest = <int, Product>{};
   _idAndProductTest[5] = Product(
     'https://thumbs.dreamstime.com/b/%D1%81%D1%8B%D1%80-%D0%B3%D0%B0%D1%83-%D0%B0-%D0%BD%D0%B0-%D0%B1%D0%B5-%D0%BE%D0%BC-%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%B5-80905784.jpg',
     'Сыр гауда',
@@ -76,7 +77,7 @@ Map idAndProductSet() {
 }
 
 Map numberAndIdSet(Map idAndProduct) {
-  var _numberAndIdTest = <int, int>{};
+  final _numberAndIdTest = <int, int>{};
 
   //print(idAndProduct.keys.elementAt(2));
 
@@ -88,6 +89,11 @@ Map numberAndIdSet(Map idAndProduct) {
 }
 
 class Product {
+
+  Product(this.imageUrl, this.title, this.price, this.unitOfMeasurement, this.rating, this.numberOfRatings, this.description, this.from, this.category){
+    colorOfRating = setColor();
+  }
+
   String imageUrl;
   String title;
   int price;
@@ -99,36 +105,12 @@ class Product {
   String from;
   int category;
 
-  Product(
-    String _imageUrl,
-    String _title,
-    int _price,
-    String _unitOfMeasurement,
-    double _rating,
-    int _numberOfRatings,
-    String _description,
-    String _from,
-    int _category,
-  ) {
-    // линтер тебе подскажет даже лучше моего, что тут не так
-    imageUrl = _imageUrl;
-    title = _title;
-    price = _price;
-    unitOfMeasurement = _unitOfMeasurement;
-    rating = _rating;
-    numberOfRatings = _numberOfRatings;
-    colorOfRating = setColor();
-    description = _description;
-    from = _from;
-    category = _category;
-  }
-
   Color setColor() {
     if (rating > 4.4) {
-      return Color(0xFF4aa73a);
+      return veryGoodColor;
     }
     if (rating > 3.4) {
-      return Color(0xFFd0a108);
+      return goodColor;
     }
     return Colors.grey;
   }
