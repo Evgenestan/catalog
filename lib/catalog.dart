@@ -77,6 +77,7 @@ class _CatalogPageState extends State<CatalogPage> {
                       children: [
                         InkWell(
                           onTap: () => filter(2),
+                          key: const Key('buttonMoloko'),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -203,6 +204,7 @@ class _CatalogPageState extends State<CatalogPage> {
       }
 
       Widget _productBuilder(BuildContext context, int index) {
+        print(index);
         Widget favorite(int index) {
           Widget returnWithColor(Color color) {
             return Positioned(
@@ -267,6 +269,7 @@ class _CatalogPageState extends State<CatalogPage> {
                         alignment: Alignment.topLeft,
                         child: FittedBox(
                           child: RichText(
+                            key: Key('item_${index}_text'),
                             textAlign: TextAlign.left,
                             text: TextSpan(children: <TextSpan>[
                               TextSpan(
@@ -359,6 +362,7 @@ class _CatalogPageState extends State<CatalogPage> {
 
       return SafeArea(
         child: StreamBuilder(
+          key: const Key('long_list'),
           stream: filteredMap,
           initialData: numberAndIdSet(idAndProduct),
           builder: (context, snapshot) {
