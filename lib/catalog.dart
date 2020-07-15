@@ -110,6 +110,7 @@ class _CatalogPageState extends State<CatalogPage> {
                       children: [
                         InkWell(
                           onTap: () => filter(3),
+                          key: const Key('buttonCheese'),
                           child: Container(
                             height: 46,
                             width: 46,
@@ -142,6 +143,7 @@ class _CatalogPageState extends State<CatalogPage> {
                       children: [
                         InkWell(
                           onTap: () => filter(4),
+                          key: const Key('buttonMeet'),
                           child: Container(
                             height: 46,
                             width: 46,

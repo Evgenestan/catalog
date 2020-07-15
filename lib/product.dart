@@ -122,7 +122,7 @@ Map numberAndIdSet(Map idAndProduct) {
   for (var i = 0; i < idAndProduct.length; i++) {
     _numberAndIdTest[i] = idAndProduct.keys.elementAt(i);
   }
-  print(_numberAndIdTest.keys);
+  //print(_numberAndIdTest.keys);
   return _numberAndIdTest;
 }
 
