@@ -99,7 +99,7 @@ Map idAndProductSet(){
 
     _idAndProductTest[i] = Product(
       imageUrl,
-      title,
+      i ==1 ? 'Невероятно длинный заголовок, который нужно проверить': title,
       Random().nextInt(500) + 100,
       '1кг',
       double.parse(Random().nextDouble().toStringAsFixed(1)) * 4 + 1,

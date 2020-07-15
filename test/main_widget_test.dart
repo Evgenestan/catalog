@@ -4,19 +4,28 @@ import 'package:catalog/main.dart';
 import 'package:image_test_utils/image_test_utils.dart';
 
 void main() {
-  testWidgets('RichTextTest', (WidgetTester tester) async {
+  testWidgets('RichTextTest0', (WidgetTester tester) async {
     await provideMockedNetworkImages(() async {
       await tester.pumpWidget(MyApp());
 
       String check = 'ok';
+      final findStreamBuilder = find.byKey(const Key('long_list'));
+      final findSliverGrid = find.byType(SliverGrid);
+      final SliverGrid sliverGrid = tester.widget(findSliverGrid);
+      final length = sliverGrid.delegate.estimatedChildCount;
+      //final findContainer0 = find.byKey(const Key('container0'));
+      //final Container container0 = tester.widget(findContainer0);
+      //print(container0.constraints.heightConstraints().maxHeight);
 
-      for (var i = 0; i < 100; i++) {
+
+      for (var i = 0; i < length; i++) {
         bool cycle = true;
 
         while (cycle) {
           if (find.byKey(Key('item_${i}_text')).toString().substring(0, 7) ==
               'exactly') {
             cycle = false;
+            await tester.ensureVisible(find.byKey(Key('item_${i}_text')));
             final richText = find.byKey(Key('item_${i}_text'));
             final RichText richTextWidget = tester.widget(richText);
             final text = richTextWidget.text.toPlainText();
@@ -25,11 +34,7 @@ void main() {
               check = 'ne ok';
             }
           } else {
-            await tester.drag(
-                find.byKey(
-                  const Key('long_list'),
-                ),
-                const Offset(0, -50));
+            await tester.drag(findStreamBuilder, const Offset(0, -50));
             await tester.pumpAndSettle();
           }
         }
@@ -46,10 +51,13 @@ void main() {
       final findButton = find.byKey(const Key('buttonMoloko'));
       await tester.tap(findButton);
       await tester.pump();
+      final findSliverGrid = find.byType(SliverGrid);
+      final SliverGrid sliverGrid = tester.widget(findSliverGrid);
+      final length = sliverGrid.delegate.estimatedChildCount;
 
       String check = 'ok';
 
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < length; i++) {
         for (var j = 0; j < 100; j++) {
           final richText = find.byKey(Key('item_${i}_text'));
           if (richText.toString().substring(0, 7) == 'exactly') {
@@ -81,10 +89,13 @@ void main() {
       final findButton = find.byKey(const Key('buttonCheese'));
       await tester.tap(findButton);
       await tester.pump();
+      final findSliverGrid = find.byType(SliverGrid);
+      final SliverGrid sliverGrid = tester.widget(findSliverGrid);
+      final length = sliverGrid.delegate.estimatedChildCount;
 
       String check = 'ok';
 
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < length; i++) {
         for (var j = 0; j < 100; j++) {
           final richText = find.byKey(Key('item_${i}_text'));
           if (richText.toString().substring(0, 7) == 'exactly') {
@@ -116,10 +127,13 @@ void main() {
       final findButton = find.byKey(const Key('buttonMeet'));
       await tester.tap(findButton);
       await tester.pump();
+      final findSliverGrid = find.byType(SliverGrid);
+      final SliverGrid sliverGrid = tester.widget(findSliverGrid);
+      final length = sliverGrid.delegate.estimatedChildCount;
 
       String check = 'ok';
 
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < length; i++) {
         for (var j = 0; j < 100; j++) {
           final richText = find.byKey(Key('item_${i}_text'));
           if (richText.toString().substring(0, 7) == 'exactly') {
@@ -143,5 +157,9 @@ void main() {
       expect(check, 'ok');
     });
   });
+
+
+
+
 
 }

@@ -210,6 +210,7 @@ class _CatalogPageState extends State<CatalogPage> {
         Widget favorite(int index) {
           Widget returnWithColor(Color color) {
             return Positioned(
+              key: Key('positioned$index'),
               right: 10,
               top: 10,
               child: Container(
@@ -238,20 +239,27 @@ class _CatalogPageState extends State<CatalogPage> {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: Container(
+            width: 5000,
+            height: 5000,
+            key: Key('container$index'),
             decoration: BoxDecoration(
                 border: Border.all(color: borderColor),
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
             child: FittedBox(
+              key: Key('fittedBox$index'),
               fit: BoxFit.scaleDown,
               alignment: Alignment.center,
               child: Stack(
+                key: Key('stack$index'),
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
+                        key: Key('padding$index'),
                         padding: const EdgeInsets.fromLTRB(25, 18, 25, 0),
                         child: Container(
+                          key: Key('imageContainer$index'),
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
@@ -363,53 +371,55 @@ class _CatalogPageState extends State<CatalogPage> {
       }
 
       return SafeArea(
-        child: StreamBuilder(
-          key: const Key('long_list'),
-          stream: filteredMap,
-          initialData: numberAndIdSet(idAndProduct),
-          builder: (context, snapshot) {
-            mySnapshot = snapshot;
-            return CustomScrollView(slivers: <Widget>[
-              SliverOverlapInjector(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              ),
-              SliverAppBar(
-                floating: true,
-                backgroundColor: Colors.white,
-                expandedHeight: 130.0,
-                toolbarHeight: 130,
-                actions: [
-                  filterParameters(),
-                ],
-              ),
-              snapshot.data.length == 0
-                  ? const SliverPadding(
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 40),
-                      sliver: SliverToBoxAdapter(
-                        child: Center(
-                          child: Text('Нет товаров в этой категории'),
+        child: Container(
+          child: StreamBuilder(
+            key: const Key('long_list'),
+            stream: filteredMap,
+            initialData: numberAndIdSet(idAndProduct),
+            builder: (context, snapshot) {
+              mySnapshot = snapshot;
+              return CustomScrollView(slivers: <Widget>[
+                SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverAppBar(
+                  floating: true,
+                  backgroundColor: Colors.white,
+                  expandedHeight: 130.0,
+                  toolbarHeight: 130,
+                  actions: [
+                    filterParameters(),
+                  ],
+                ),
+                snapshot.data.length == 0
+                    ? const SliverPadding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 40),
+                        sliver: SliverToBoxAdapter(
+                          child: Center(
+                            child: Text('Нет товаров в этой категории'),
+                          ),
+                        ),
+                      )
+                    : SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 40),
+                        sliver: SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            //childAspectRatio: (MediaQuery.of(context).size.width/MediaQuery.of(context).size.height*1.2)
+                            childAspectRatio: 190 / 350,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            // стоило сделать функцию _productBuilder(BuildContext context, int index) => ... вместо products(int index), тогда бы не была нужна эта анонимка
+                            _productBuilder,
+                            childCount: snapshot.data.length,
+                          ),
                         ),
                       ),
-                    )
-                  : SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 40),
-                      sliver: SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          //childAspectRatio: (MediaQuery.of(context).size.width/MediaQuery.of(context).size.height*1.2)
-                          childAspectRatio: 190 / 350,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          // стоило сделать функцию _productBuilder(BuildContext context, int index) => ... вместо products(int index), тогда бы не была нужна эта анонимка
-                          _productBuilder,
-                          childCount: snapshot.data.length,
-                        ),
-                      ),
-                    ),
-            ]);
-          },
+              ]);
+            },
+          ),
         ),
       );
     }
