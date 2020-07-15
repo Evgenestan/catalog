@@ -275,24 +275,25 @@ class _CatalogPageState extends State<CatalogPage> {
                         ),
                       ),
                       Container(
+                        width: 150,
                         padding: const EdgeInsets.fromLTRB(14, 17, 14, 0),
                         alignment: Alignment.topLeft,
-                        child: FittedBox(
-                          child: RichText(
-                            key: Key('item_${index}_text'),
-                            textAlign: TextAlign.left,
-                            text: TextSpan(children: <TextSpan>[
-                              TextSpan(
+                        child: RichText(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          key: Key('item_${index}_text'),
+                          textAlign: TextAlign.left,
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  idAndProduct[mySnapshot.data[index]].title,
+                              style: smallBlackTextStyle,
+                            ),
+                            TextSpan(
                                 text:
-                                    idAndProduct[mySnapshot.data[index]].title,
-                                style: smallBlackTextStyle,
-                              ),
-                              TextSpan(
-                                  text:
-                                      ' /${idAndProduct[mySnapshot.data[index]].unitOfMeasurement}',
-                                  style: smallGrayTextStyle),
-                            ]),
-                          ),
+                                    ' /${idAndProduct[mySnapshot.data[index]].unitOfMeasurement}',
+                                style: smallGrayTextStyle),
+                          ]),
                         ),
                       ),
                       Padding(
@@ -310,6 +311,7 @@ class _CatalogPageState extends State<CatalogPage> {
                                       Radius.circular(5))),
                               child: Text(
                                 '${idAndProduct[mySnapshot.data[index]].rating}',
+                                maxLines: 1,
                                 style: smallWhiteTextStyle,
                               ),
                             ),
@@ -317,6 +319,7 @@ class _CatalogPageState extends State<CatalogPage> {
                               padding: const EdgeInsets.only(left: 5),
                               child: Text(
                                 '${idAndProduct[mySnapshot.data[index]].numberOfRatings} оценок',
+                                maxLines: 1,
                                 style: smallGrayTextStyle,
                               ),
                             )
@@ -343,20 +346,28 @@ class _CatalogPageState extends State<CatalogPage> {
                         padding: const EdgeInsets.fromLTRB(14, 7, 14, 0),
                         child: Align(
                             alignment: Alignment.topLeft,
-                            child: Text(
-                              idAndProduct[mySnapshot.data[index]].from,
-                              style: superSmallBlackTextStyle,
-                              textAlign: TextAlign.left,
+                            child: Container(
+                              width: 140,
+                              child: Text(
+                                idAndProduct[mySnapshot.data[index]].from,
+                                maxLines: 1,
+                                style: superSmallBlackTextStyle,
+                                textAlign: TextAlign.left,
+                              ),
                             )),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(14, 25, 14, 25),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text(
-                            '${idAndProduct[mySnapshot.data[index]].price} Р',
-                            style: mediumBlackTextStyle,
-                            textAlign: TextAlign.left,
+                          child: Container(
+                            width: 140,
+                            child: Text(
+                              '${idAndProduct[mySnapshot.data[index]].price} Р',
+                              maxLines: 1,
+                              style: mediumBlackTextStyle,
+                              textAlign: TextAlign.left,
+                            ),
                           ),
                         ),
                       ),
